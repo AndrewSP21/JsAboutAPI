@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="loadContainer">
+        <h1 class="title">Фото дня</h1>
+        <button class="loadPhoto">Загрузить</button>
+    </div>
+
+    <div class="container">
+
+        <div class="likes">
+            <div class="counter">0</div>
+            <svg class="likes__Svg" title="Like Heart SVG File" width="21" height="21" viewBox="0 0 24 24" fill="none"
+                stroke="#8899a4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path
+                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                </path>
+            </svg>
+
+        </div>
+
+        <div class="photoDay"><img
+                src="https://images.unsplash.com/photo-1698725223016-03479bfd52e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1Mzg1ODd8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDIxMzQ2ODV8&ixlib=rb-4.0.3&q=80&w=400"
+                alt=""></div>
+        <div class="likes">
+            <div class="author">Автор: <span>Автор фото</span></div>
+        </div>
+
+    </div>
+
+
+    <div id="photo-container"></div>
+
+
+    <script>
+        const photoContainer = document.getElementById('photo-container');
+        const loadPhoto = document.querySelector('.loadPhoto');
+        const counter = document.querySelector('.counter');
+        const author = document.querySelector('.author span');
+        const photoDay = document.querySelector('.photoDay img');
+        const likes__Svg = document.querySelector('.likes__Svg');
+
+        const photoDayArrLoaded = JSON.parse(localStorage.getItem('photoDay'));
+        let photoInfo = {};
+        preLoad();
+        loadPhoto.addEventListener('click', () => {
+            loadPage();
+        });
+        function loadPage() {
+            const photo = fetchPhotos();
+            photo.then(result => {
+                photoInfo = {
+                    id: result.id,
+                    userName: result.user.name,
+                    url: result.urls.small,
+                    likes: result.likes
+                }
+                author.textContent = photoInfo.userName;
+                counter.textContent = photoInfo.likes;
+                photoDay.src = photoInfo.url;
+            });
+        };
+        function preLoad() {
+            if (localStorage.getItem('photoDay') !== null) {
+                const photoDayArrLoaded = JSON.parse(localStorage.getItem('photoDay'));
+                const lastPhoto = photoDayArrLoaded[photoDayArrLoaded.length - 1];
+                photoInfo = {
+                    id: lastPhoto.id,
+                    userName: lastPhoto.userName,
+                    url: lastPhoto.url,
+                    likes: lastPhoto.likes
+                }
+                author.textContent = lastPhoto.userName;
+                counter.textContent = lastPhoto.likes;
+                photoDay.src = lastPhoto.url;
+            } else {
+                loadPage();
+            }
+        }
+        
+        async function fetchPhotos() {
+            try {
+                const response = await fetch(`https://api.unsplash.com/photos/random?&client_id=YtZ_CNOTss1NTuICYhVd_i2WOwFqPy_tm8Go1nSJuUA`);
+                const photos = await response.json();
+                return photos;
+            } catch (error) {
+                console.error('Ошибка при загрузке фотографий:', error);
+                return [];
+            }
+        }
+        likes__Svg.addEventListener('click', () => {
+            counter.textContent++;
+            saveLocalStorage();
+
+        })
+        function saveLocalStorage() {
+            photoInfo.likes = counter.textContent;
+            if (localStorage.getItem('photoDay') === null) {
+                localStorage.setItem('photoDay', JSON.stringify([photoInfo]));
+            } else {
+                const photoDayArrLoaded = JSON.parse(localStorage.getItem('photoDay'));
+
+                let newID = true;
+                for (let i = 0; i < photoDayArrLoaded.length; i++) {
+                    if (photoDayArrLoaded[i].id == photoInfo.id) {
+                        photoDayArrLoaded[i].likes = counter.textContent;
+                        localStorage.setItem('photoDay', JSON.stringify(photoDayArrLoaded));
+                        newID = false;
+                        break;
+                    }
+                }
+                if (newID) {
+                    photoDayArrLoaded.push(photoInfo);
+                    localStorage.setItem('photoDay', JSON.stringify(photoDayArrLoaded));
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

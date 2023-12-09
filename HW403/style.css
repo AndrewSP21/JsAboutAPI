@@ -1,0 +1,76 @@
+@charset "UTF-8";
+.likes,
+.photoDay {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+.likes__Svg:hover,
+.photoDay__Svg:hover {
+  stroke: rgb(86, 84, 84);
+}
+.likes__Svg:active,
+.photoDay__Svg:active {
+  fill: gray;
+}
+
+.likes {
+  margin-top: 10px;
+}
+
+.container {
+  border: 1px solid rgb(93, 145, 213);
+  border-radius: 30px;
+  width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #f3fdff;
+}
+
+.loadContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.loadContainer > button {
+  display: inline-block;
+  text-shadow: 1px 1px #fff;
+  text-decoration: none;
+  padding: 0.3em 1em;
+  border: 1px solid #aaa;
+  border-radius: 100px;
+  outline: none;
+  background: #d6dbbf no-repeat;
+  background-image: linear-gradient(to left, #aaa, #aaa), linear-gradient(to left, #feffe8, #feffe8), linear-gradient(#e8fbff, #bfcedb);
+  background-position: calc(100% - 2.7em) 0, calc(100% - 2.7em + 1px) 0, 0 0;
+  background-size: 1px 100%, 1px 100%, auto auto;
+  overflow: hidden;
+}
+.loadContainer > button:after {
+  content: "»";
+  position: relative;
+  bottom: 0;
+  display: inline-block;
+  margin-left: 1.4em;
+  vertical-align: middle;
+  font-family: "Times", "Times New Roman", "serif", "sans-serif", "EmojiSymbols";
+  font-weight: 700;
+  font-size: 140%;
+  transform: rotate(90deg);
+}
+.loadContainer > button:hover {
+  background-color: #67b7d2;
+  background-image: linear-gradient(to left, #aaa, #aaa), linear-gradient(to left, #feffe8, #feffe8), linear-gradient(#effafe, #84f3ff);
+}
+.loadContainer > button:active:after {
+  bottom: -1.2em;
+  transition: 0.3s;
+}
+
+.author > span {
+  font-weight: bold;
+}/*# sourceMappingURL=style.css.map */
